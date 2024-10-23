@@ -12,6 +12,9 @@ const csrfProtection = csrf({ cookie: true });
 app.use(csrfProtection);
 app.use(express.json())
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 const allowedOrigins = [
   'http://20.211.46.113/ligat',
@@ -57,25 +60,24 @@ app.post('/api/user/:id/change-email', csrfProtection, (req, res) => {
 })
 
 app.get('/api/file', (req, res) => {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
+  const fileName = req.query.name;
 
-  let fileName = req.query.name;
-
-  // Validasi untuk menghindari path traversal
+  // Validasi nama file untuk mencegah path traversal
   if (!/^[a-zA-Z0-9_-]+$/.test(fileName)) {
     return res.status(400).send('Invalid file name');
   }
 
-  const filePath = path.join(__dirname, 'files', fileName);
+  const filePath = path.join(__dirname, 'files', fileName); 
   const normalizedPath = path.normalize(filePath);
 
+  // Pastikan path tetap berada di dalam folder 'files'
   if (!normalizedPath.startsWith(path.join(__dirname, 'files'))) {
     return res.status(403).send('Access denied');
   }
 
   res.sendFile(normalizedPath);
 });
+
 
 // Melayani index.html untuk semua rute lain
 app.get('*', (req, res) => {
