@@ -1,20 +1,12 @@
-# Dockerfile for Backend
 FROM node:22
 
-# Set the working directory
-WORKDIR /app
+WORKDIR /app/backend
 
-# Copy package.json and install dependencies
-COPY package.json ./
-COPY pnpm-lock.yaml ./
-RUN npm install --global pnpm
-RUN pnpm install
+COPY backend/package*.json ./
 
-# Copy the rest of the backend files
-COPY . ./
+RUN npm install
 
-# Expose the port
+COPY backend/ .
+
 EXPOSE 3000
-
-# Start the application
-CMD ["pnpm", "start"]
+CMD ["node", "server.js"]

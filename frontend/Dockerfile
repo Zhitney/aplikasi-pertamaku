@@ -1,24 +1,16 @@
 # Dockerfile for Frontend
-FROM node:22 AS build
+FROM node:22
 
 # Set the working directory
-WORKDIR /app
+WORKDIR /app/frontend
 
 # Copy package.json and install dependencies
-COPY package.json ./
-COPY pnpm-lock.yaml ./
-RUN npm install --global pnpm
-RUN pnpm install
+COPY frontend/package*.json ./
+
+RUN npm install 
 
 # Copy the rest of the frontend files
-COPY . ./
-
-# Build the frontend
-RUN pnpm run build
-
-# Stage 2: Serve the static files using nginx
-FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY frontend/ .
 
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
