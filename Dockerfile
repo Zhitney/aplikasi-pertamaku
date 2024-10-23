@@ -7,10 +7,14 @@ RUN npm install -g pnpm && pnpm install
 COPY ./frontend ./
 
 RUN pnpm run build
+
 FROM node:18-alpine AS backend
 
 WORKDIR /app/backend
 COPY ./backend/package.json ./backend/pnpm-lock.yaml ./
+
+RUN npm install dompurify
+RUN npm install csurf cookie-parser
 
 RUN npm install -g pnpm && pnpm install
 
