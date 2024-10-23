@@ -6,11 +6,10 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
 
+const app = express();
 app.use(cookieParser());
 const csrfProtection = csrf({ cookie: true });
 app.use(csrfProtection);
-
-const app = express();
 app.use(express.json())
 
 
