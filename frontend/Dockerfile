@@ -11,7 +11,7 @@ RUN npm install --global pnpm
 RUN pnpm install
 
 # Copy the rest of the frontend files
-COPY frontend/ ./
+COPY . ./
 
 # Build the frontend
 RUN pnpm run build

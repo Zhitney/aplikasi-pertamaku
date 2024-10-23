@@ -11,7 +11,7 @@ RUN npm install --global pnpm
 RUN pnpm install
 
 # Copy the rest of the backend files
-COPY backend/ ./
+COPY . ./
 
 # Expose the port
 EXPOSE 3000
