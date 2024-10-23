@@ -48,7 +48,7 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Melayani index.html untuk semua rute lain
-app.get('*', (req, res) => {
+app.get('/ligat', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
