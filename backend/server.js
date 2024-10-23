@@ -11,11 +11,11 @@ app.use(cors({
   optionsSuccessStatus: 200,
 }));
 
-const connection = new sqlite3.Database('./db/aplikasi.db')
+const connection = new sqlite3.Database('./db/aplikasi.db');
 
 app.get('/api/user/:id', (req, res) => {
   const query = `SELECT * FROM users WHERE id = ${req.params.id}`;
-  console.log(query)
+  console.log(query);
   connection.all(query, (error, results) => {
     if (error) throw error;
     res.json(results);
@@ -28,18 +28,28 @@ app.post('/api/user/:id/change-email', (req, res) => {
 
   connection.run(query, function (err) {
     if (err) throw err;
-    if (this.changes === 0 ) res.status(404).send('User not found');
+    if (this.changes === 0) res.status(404).send('User not found');
     else res.status(200).send('Email updated successfully');
   });
-
 });
 
 app.get('/api/file', (req, res) => {
-  const __filename = fileURLToPath(import.meta.url); 
-  const __dirname = path.dirname(__filename); 
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
 
   const filePath = path.join(__dirname, 'files', req.query.name);
   res.sendFile(filePath);
+});
+
+// Menambahkan rute untuk melayani file statis
+const __filename = fileURLToPath(import.meta.url); 
+const __dirname = path.dirname(__filename); 
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Melayani index.html untuk semua rute lain
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(3000, () => {
