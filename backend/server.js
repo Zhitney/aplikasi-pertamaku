@@ -79,7 +79,7 @@ app.get('/api/file', (req, res) => {
 });
 
 // Melayani index.html untuk semua rute lain
-app.get('/ligat', (req, res) => {
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
