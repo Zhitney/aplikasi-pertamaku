@@ -15,9 +15,9 @@ app.use(express.json())
 
 
 const allowedOrigins = [
-  'http://20.211.46.113/ligat/',
-  'http://20.211.46.113/',
-  'http://20.211.46.113/:80'
+  'http://20.211.46.113/ligat',
+  'http://20.211.46.113',
+  'http://20.211.46.113:80'
 ];
 
 app.use(cors({
