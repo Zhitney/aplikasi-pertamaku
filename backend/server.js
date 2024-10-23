@@ -9,16 +9,14 @@ import csrf from 'csurf';
 const app = express();
 app.use(cookieParser());
 
-// Definisikan __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// CSRF protection hanya diterapkan pada POST
 const csrfProtection = csrf({ cookie: true });
 
 app.use(express.json());
 
-// CORS setup tanpa trailing slashes
+
 const allowedOrigins = [
   'http://20.211.46.113',
   'http://20.211.46.113:80'
@@ -85,7 +83,6 @@ app.get('/api/file', (req, res) => {
   res.sendFile(normalizedPath);
 });
 
-// Melayani index.html untuk semua rute lain
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
