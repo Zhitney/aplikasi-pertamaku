@@ -3,6 +3,9 @@ FROM node:18-alpine AS frontend
 WORKDIR /app/frontend
 COPY ./frontend/package.json ./frontend/pnpm-lock.yaml ./
 
+RUN npm install dompurify
+RUN npm install csurf cookie-parser
+
 RUN npm install -g pnpm && pnpm install
 COPY ./frontend ./
 
