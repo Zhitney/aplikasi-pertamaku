@@ -1,29 +1,8 @@
 services:
-  frontend:
-    build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
+  app:
+    build: .
     ports:
-      - "80:80"
-    volumes:
-      - ./frontend:/app
-    depends_on:
-      - backend
+      - "80:3000"
     environment:
-      - NAME=MahaLigat  
-  
-  backend:
-    build:
-      context: .
-      dockerfile: ./backend/Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./backend/db:/app/db
-    environment:
-      - NAME=MahaLigat
-    
-
-  
-   
-
+      VUE_APP_SUBDOMAIN: ligat
+    container_name: aplikasi-pertamaku
