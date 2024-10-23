@@ -5,8 +5,8 @@ FROM node:22
 WORKDIR /app
 
 # Copy package.json and install dependencies
-COPY backend/package.json ./
-COPY backend/pnpm-lock.yaml ./
+COPY package.json ./
+COPY pnpm-lock.yaml ./
 RUN npm install --global pnpm
 RUN pnpm install
 

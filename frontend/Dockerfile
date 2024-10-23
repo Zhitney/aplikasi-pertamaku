@@ -5,8 +5,8 @@ FROM node:22 AS build
 WORKDIR /app
 
 # Copy package.json and install dependencies
-COPY frontend/package.json ./
-COPY frontend/pnpm-lock.yaml ./
+COPY package.json ./
+COPY pnpm-lock.yaml ./
 RUN npm install --global pnpm
 RUN pnpm install
 
