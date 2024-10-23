@@ -8,16 +8,18 @@ import csrf from 'csurf';
 
 const app = express();
 app.use(cookieParser());
-const csrfProtection = csrf({ cookie: true });
-app.use(csrfProtection);
-app.use(express.json())
 
+// Definisikan __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// CSRF protection hanya diterapkan pada POST
+const csrfProtection = csrf({ cookie: true });
 
+app.use(express.json());
+
+// CORS setup tanpa trailing slashes
 const allowedOrigins = [
-  'http://20.211.46.113/ligat',
   'http://20.211.46.113',
   'http://20.211.46.113:80'
 ];
@@ -35,8 +37,12 @@ app.use(cors({
   optionsSuccessStatus: 200,
 }));
 
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')));
+
 const connection = new sqlite3.Database('./db/aplikasi.db');
 
+// GET API untuk user
 app.get('/api/user/:id', (req, res) => {
   const query = 'SELECT * FROM users WHERE id = ?';
   const params = [req.params.id];
@@ -47,6 +53,7 @@ app.get('/api/user/:id', (req, res) => {
   });
 });
 
+// POST API untuk mengubah email dengan CSRF protection
 app.post('/api/user/:id/change-email', csrfProtection, (req, res) => {
   const newEmail = req.body.email;
   const query = 'UPDATE users SET email = ? WHERE id = ?';
@@ -57,20 +64,20 @@ app.post('/api/user/:id/change-email', csrfProtection, (req, res) => {
     if (this.changes === 0) res.status(404).send('User not found');
     else res.status(200).send('Email updated successfully');
   });
-})
+});
 
+// API untuk mengirim file
 app.get('/api/file', (req, res) => {
-  const fileName = req.query.name;
+  let fileName = req.query.name;
 
-  // Validasi nama file untuk mencegah path traversal
+  // Validasi untuk menghindari path traversal
   if (!/^[a-zA-Z0-9_-]+$/.test(fileName)) {
     return res.status(400).send('Invalid file name');
   }
 
-  const filePath = path.join(__dirname, 'files', fileName); 
+  const filePath = path.join(__dirname, 'files', fileName);
   const normalizedPath = path.normalize(filePath);
 
-  // Pastikan path tetap berada di dalam folder 'files'
   if (!normalizedPath.startsWith(path.join(__dirname, 'files'))) {
     return res.status(403).send('Access denied');
   }
@@ -78,12 +85,12 @@ app.get('/api/file', (req, res) => {
   res.sendFile(normalizedPath);
 });
 
-
 // Melayani index.html untuk semua rute lain
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Jalankan server
 app.listen(3000, () => {
   console.log('Server running on port 3000');
 });
